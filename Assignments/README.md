@@ -1,3 +1,3 @@
 # EDA-Fall2023
 ENV872 - Environmental Data Exploration - Fall 2023
-Aditi Jackson - test - assignment 1
+EDIT: Aditi Jackson Assignment 1
