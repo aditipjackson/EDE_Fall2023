@@ -32,16 +32,16 @@ This exercise accompanies the lessons in Environmental Data Analytics on coding 
 
 ```{r basics 1}
 #1. 
-seq(1,30,3)
-one_to_thirty_by_three <- seq(1,30,3)
-one_to_thirty_by_three
+seq(1,30,3) # generating sequence of numbers from 1 to 30, increasing by 3's
+one_to_thirty_by_three <- seq(1,30,3) # assigning name to sequence
+one_to_thirty_by_three # running variable that contains sequence created above
 
 #2. 
-mean(one_to_thirty_by_three)
-median(one_to_thirty_by_three)
+mean(one_to_thirty_by_three) # calculating mean of sequence from step 1
+median(one_to_thirty_by_three) # calculating median of sequence from step 1
 
 #3. 
-
+mean(one_to_thirty_by_three) > median(one_to_thirty_by_three) # testing if mean > median
 
 ```
 
@@ -56,6 +56,16 @@ median(one_to_thirty_by_three)
 8.  Label the columns of your data frame with informative titles.
 
 ```{r basics 2}
+
+#5 & $6.
+Name_vector <- c("Anna", "Ben", "Cameron", "Denis") # String variables
+Test_score_vector <- c(99,49,97,48) # Float variables
+Passed_failed_vector <- c(TRUE,FALSE,TRUE,FALSE) # Boolean variables
+
+#7.
+df_student_scores <- as.data.frame(Name_vector,Test_score_vector,Passed_failed_vector)
+
+
 
 ```
 
