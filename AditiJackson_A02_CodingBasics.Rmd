@@ -64,13 +64,13 @@ Passed_failed_vector <- c(TRUE,FALSE,TRUE,FALSE) # Vector noting passage or fail
 
 #7.
 df_student_scores <- as.data.frame(cbind(Name_vector,Test_score_vector,Passed_failed_vector)) #combining vectors into a data frame and assigning it a name
-df_student_scores 
+df_student_scores # running this line with show the data frame in the console
 
 #8.
 df_student_scores_COPY <- df_student_scores # making copy of original data set in order to apply new column names
-df_student_scores_COPY # copy of data
+df_student_scores_COPY # running this line will generate a copy of the data frame in the console
 names(df_student_scores_COPY) <- c("Student Name","Test Score","Passed Test? ") # using names() to change column headers
-df_student_scores_COPY
+df_student_scores_COPY # running this line with generate the data frame with new headers applied
 
 ```
 
@@ -85,29 +85,20 @@ df_student_scores_COPY
 ```{r basics 3}
 
 #10.
-x <- Test_score_vector # renaming test score vector as a single letter variable for easy manipulation
+x <- Test_score_vector # assigning test score vector to "x" for easier manipulation
+
+# creating function using an ifelse statement
 passing_grade_function <- function(x){
-  if(x>=50){
-    print("TRUE - Passing grade")
-  }
-  else{
-    print("FALSE - Failing grade")
-  }
+  report_grade <- ifelse(x>=50,TRUE,FALSE)
+   print(report_grade)
 }
 
-passing_grade_function(99)
-
-
-grade_function <- function(x){
-  ifelse(x>=50,"TRUE - Passing grade","FALSE - Failing grade")
-}
-
-grade_function(60)
-grade_function(40)
+# running newly created function, which prints whether or not the grades from the test score vector qualified the students to pass (TRUE) or fail (FALSE)
+passing_grade_function(x)
 
 
 ```
 
 12. QUESTION: Which option of `if` and `else` vs. `ifelse` worked? Why?
 
-> Answer: They both worked. They are essentially do the same thing, but ifelse allows you to consolidate the logic
+> Answer: The option 'ifelse' worked while using 'if' and 'else' separately did not. This is because 'ifelse' is a "vectorized" form of an "if-else" statement, meaning 'ifelse' can accept a vector while 'if-else' can only accept a variable at a time.
