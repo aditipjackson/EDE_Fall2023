@@ -51,11 +51,11 @@ matrix3 <- matrix(1:20, nrow = 5, ncol = 4, byrow = TRUE, # return after comma c
                   dimnames = list(c("uno", "dos", "tres", "quatro", "cinco"), 
                                   c("un", "deux", "trois", "quatre"))) #
 
-matrix1[4, ] #
+matrix1[4, ] #  
 matrix1[ , 3] #
-matrix1[c(12, 14)] #
-matrix1[c(12:14)] #
-matrix1[2:4, 1:3] #
+matrix1[c(12, 14)] # want elements in index 12 and index 14 of matrix
+matrix1[c(12:14)] # want elements in indeces 12 though 14 of matrix
+matrix1[2:4, 1:3] # 
 
 cells <- c(1, 26, 24, 68)
 rnames <- c("R1", "R2")
@@ -69,10 +69,10 @@ list1 <- list(name = "Maria", mynumbers = vector1, mymatrix = matrix1, age = 5.3
 list1[[2]]
 
 # Data Frames ----
-d <- c(1, 2, 3, 4) # What type of vector?
-e <- c("red", "white", "red", NA) # What type of vector?
-f <- c(TRUE, TRUE, TRUE, FALSE) # What type of vector?
-dataframe1 <- data.frame(d,e,f) #
+d <- c(1, 2, 3, 4) # What type of vector? Numeric vector
+e <- c("red", "white", "red", NA) # What type of vector? Character vector
+f <- c(TRUE, TRUE, TRUE, FALSE) # What type of vector? Logic vector
+dataframe1 <- data.frame(d,e,f) # 
 names(dataframe1) <- c("ID","Color","Passed"); View(dataframe1) # 
 
 dataframe1[1:2,] # 
@@ -83,23 +83,34 @@ dataframe1$ID
 
 Question: How do the different types of data appear in the Environment tab?
 
-> Answer:
+> Answer: Matrices and dataframes show up as data; vectors and variables show up as values; functions are their own category
 
 Question: In the R chunk below, write "dataframe1\$". Press `tab` after you type the dollar sign. What happens?
 
-> Answer:
+> Answer: You can access specific elements of the data frame using the $
 
 ### Coding challenge
 
 Find a ten-day forecast of temperatures (Fahrenheit) for Durham, North Carolina. Create two vectors, one representing the high temperature on each of the ten days and one representing the low.
 
 ```{r DataExercise-1a}
+# 10 High Temp in Durham (F)
+High_temp_vector_Durham_F <- c(83,83,83,78,71,79,82,85,84,82)
+
+# 10 Low Temp in Durham (F)
+Low_temp_vector_Durham_F <- c(56,58,60,61,63,63,64,64,63,60)
 
 ```
 
 Now, create two additional vectors that include the ten-day forecast for the high and low temperatures in Celsius. Use a function to create the two new vectors from your existing ones in Fahrenheit.
 
 ```{r DataExercise-1b}
+# 10 High Temp in Durham (C)
+high_C <- (High_temp_vector_Durham_F - 32)*5/9 # could also have just created a function
+
+
+# 10 Low Temp in Durham (C)
+low_C <- (Low_temp_vector_Durham_F-32)*5/9
 
 ```
 
@@ -107,11 +118,15 @@ Combine your four vectors into a data frame and add informative column names.
 
 ```{r DataExercise-1c}
 
+df_temp <- data.frame("High TEMP IN f" = High_temp_vector_Durham_F, Low_temp_vector_Durham, high_C,low_C)
+
 ```
 
 Use the common functions `summary` and `sd` to obtain basic data summaries of the ten-day forecast. How would you call these functions differently for the entire data frame vs. a single column? Attempt to demonstrate both options below.
 
 ```{r DataExercise-1d}
+summary(df_temp)
+sd(df_temp)
 
 ```
 
@@ -159,8 +174,8 @@ date_obj_today
 #Ex_3 - on your own...
 str_juneteenth <- "19 June 1865"
 #Since the format is month-day-year we will use function mdy()
-#date_juneteenth <- ()
-#date_juneteenth
+date_juneteenth <- dmy(str_juneteenth)
+date_juneteenth # prints in reverse as default
 ```
 
 ```{r DateExercise2}
@@ -184,7 +199,7 @@ fixed_date_obj_past
 #Fix for century issue
 str_past <- "55-feb-3"
 #Alternative 1
-date_obj_past <- fast_strptime(str_past,"%y-%b-%d",cutoff_2000=23L)
+date_obj_past <- fast_strptime(str_past,"%y-%b-%d",cutoff_2000=23L) # cutoff_2000 is name of the argument, 23L is what to used as cutoff... Next year would be 24L.... Right now any 24 that appears in the data set is probably historical
 date_obj_past
 
 #Alternative 2
