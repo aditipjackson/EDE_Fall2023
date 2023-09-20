@@ -85,7 +85,7 @@ View(Neonics) # View() allows me to view the entire set of data
 
 6.  Using the `summary` function on the "Effect" column, determine the most common effects that are studied. Why might these effects specifically be of interest?
 
-```{r}
+```{r Summary of Neonics Effects}
 summary(Neonics$Effect) #  summarizing the effects column of Neonics; the "$" allows us to pull a specific column
 ```
 
@@ -93,7 +93,7 @@ summary(Neonics$Effect) #  summarizing the effects column of Neonics; the "$" al
 
 7.  Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.[TIP: The `sort()` command can sort the output of the summary command...]
 
-```{r}
+```{r Summary of Neonics Common Names}
 # Summary_CommonName <- summary(Neonics$Species.Common.Name)
 # sort(Summary_CommonName)
 summary(sort(Neonics$Species.Common.Name)) #embedded sort within summary
@@ -104,18 +104,19 @@ summary(sort(Neonics$Species.Common.Name)) #embedded sort within summary
 
 8.  Concentrations are always a numeric value. What is the class of `Conc.1..Author.` column in the dataset, and why is it not numeric?
 
-```{r}
+```{r Class of Concentrations}
 class(Neonics$Conc.1..Author.) # class of Conc.1..Author. is a factor
-
 ```
 
-> Answer: The column above is a factor, which
+> Answer: The column above is a factor. This could be because the column was a string in the CSV file, and when we imported the data we told R to "import strings as factors." Therefore our code changed the column to a factor. It's likely not numeric because it is nominal data??
 
 ## Explore your data graphically (Neonics)
 
 9.  Using `geom_freqpoly`, generate a plot of the number of studies conducted by publication year.
 
 ```{r}
+ggplot(Neonics) +
+  geom_freqpoly(aes(x = CAS.Number))
 
 ```
 
@@ -134,6 +135,7 @@ Interpret this graph. What are the most common test locations, and do they diffe
 [**TIP**: Add `theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))` to the end of your plot command to rotate and align the X-axis labels...]
 
 ```{r}
+
 
 ```
 
