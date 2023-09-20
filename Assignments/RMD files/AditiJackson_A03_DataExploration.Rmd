@@ -114,15 +114,18 @@ class(Neonics$Conc.1..Author.) # class of Conc.1..Author. is a factor
 
 9.  Using `geom_freqpoly`, generate a plot of the number of studies conducted by publication year.
 
-```{r}
-ggplot(Neonics) +
-  geom_freqpoly(aes(x = CAS.Number))
+```{r graph of studies by year 1}
+ggplot(Neonics) + # setting the canvas
+  geom_freqpoly(aes(x = Publication.Year), bins=40) # adding paint
 
 ```
 
 10. Reproduce the same graph but now add a color aesthetic so that different Test.Location are displayed as different colors.
 
-```{r}
+```{r graph of studies by year 2}
+ggplot(Neonics) + 
+  geom_freqpoly(aes(x = Publication.Year), bins=40) +
+  geom_freqpoly(aes(x = Test.Location), bins = 40, color="pink")
 
 ```
 
@@ -134,24 +137,35 @@ Interpret this graph. What are the most common test locations, and do they diffe
 
 [**TIP**: Add `theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1))` to the end of your plot command to rotate and align the X-axis labels...]
 
-```{r}
+```{r graph of endpoint counts}
 
+ggplot(Neonics, aes(x = Endpoint)) + # using ggplot to specify data set and column
+  geom_bar() + # specifying that I want a bar graph
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust=1)) # rotating x-axis labels for easier viewing
 
 ```
 
-> Answer:
+> Answer: The most common end points are NOEL and LOEL. Per the appendix, NOEL is defined as "No-observable-effect-level" and represents :the highest dose (concentration) producing effects not significantly different from responses of controls according to author's reported statistical test". LOEL is defined as the "lowest-observable-effect-level" and represents the "lowest dose (concentration) producing effects that were significantly different (as reported by authors) from responses of controls."
 
 ## Explore your data (Litter)
 
 12. Determine the class of collectDate. Is it a date? If not, change to a date and confirm the new class of the variable. Using the `unique` function, determine which dates litter was sampled in August 2018.
 
-```{r}
+```{r class of collectDate}
+
+class(Litter$collectDate) # class of collectDate is a factor
+Litter$collectDate <- as.Date(Litter$collectDate, format = "%m/%d/%Y") # converting collectDate column from factor to date using as.Date function
+class(Litter$collectDate) # column is now classified as date
+unique(Litter$collectDate)
+
 
 ```
 
 13. Using the `unique` function, determine how many plots were sampled at Niwot Ridge. How is the information obtained from `unique` different from that obtained from `summary`?
 
 ```{r}
+
+
 
 ```
 
