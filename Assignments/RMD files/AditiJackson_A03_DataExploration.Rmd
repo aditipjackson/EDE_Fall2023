@@ -60,51 +60,56 @@ Litter <- read.csv("./Data/Raw/NEON_NIWO_Litter_massdata_2018-08_raw.csv",string
 
 2.  The neonicotinoid dataset was collected from the Environmental Protection Agency's ECOTOX Knowledgebase, a database for ecotoxicology research. Neonicotinoids are a class of insecticides used widely in agriculture. The dataset that has been pulled includes all studies published on insects. Why might we be interested in the ecotoxicology of neonicotinoids on insects? Feel free to do a brief internet search if you feel you need more background information.
 
-> Answer: We may want to know how effective these insecticides are on killing insects and alternativley may want ot know if they chemicals are doing more harm than good.
+> Answer: Given that neonicotinoids are widely uses in agriculture, they likely have a huge impact on insect populations and broader ecosystem health. Given that insects play a critical role in most ecosytems, a decline or disrupiton in insect populations could have environemtnal knock-on effects. Studying this data set could help us identify and better understand environmental externalities of using neonictoinoids.
 
 3.  The Niwot Ridge litter and woody debris dataset was collected from the National Ecological Observatory Network, which collectively includes 81 aquatic and terrestrial sites across 20 ecoclimatic domains. 32 of these sites sample forest litter and woody debris, and we will focus on the Niwot Ridge long-term ecological research (LTER) station in Colorado. Why might we be interested in studying litter and woody debris that falls to the ground in forests? Feel free to do a brief internet search if you feel you need more background information.
 
-> Answer:
+> Answer: We may be interested in studying litter and woody debris for a variety of different reasons, including gaining insight into forest biodiversity or conducting fire risk assessments. Overall this data can help inform better forest management practices.
 
 4.  How is litter and woody debris sampled as part of the NEON network? Read the NEON_Litterfall_UserGuide.pdf document to learn more. List three pieces of salient information about the sampling methods here:
 
 > Answer: 
- 1.
- 2.
- 3. 
+ 1. Litter and debris sampling is executed at sites that conitan woody vegetation greater than 2 meters tall; samples are collected using a collected of ground and elevated traps
+ 2. Sampling only occurs in tower plots which are randomly selected
+ 3. Ground traps are sampled once a year while elevated traps are samples one time every two weeks
 
 ## Obtain basic summaries of your data (Neonics)
 
 5.  What are the dimensions of the dataset?
 
-```{r}
-
+```{r Neonics data dimensions}
+dim(Neonics) # dim()  gives use the number of rows and columns in data set
+# Neonics has 4623 rows and 30 columns
+View(Neonics) # View() allows me to view the entire set of data
 ```
 
 6.  Using the `summary` function on the "Effect" column, determine the most common effects that are studied. Why might these effects specifically be of interest?
 
 ```{r}
-
+summary(Neonics$Effect) #  summarizing the effects column of Neonics; the "$" allows us to pull a specific column
 ```
 
-> Answer:
-
+> Answer: The most commonly studdied effects include Population and Mortality. Population is likely of interest to researchers so that they can understand the effects of neonicotinoids on current and histroical insect populations and identify trends. Similarly, researchers are likely interested in studying the effects of neonicotinoids on mortality to identify the effectivites of insecticdes.
 
 7.  Using the `summary` function, determine the six most commonly studied species in the dataset (common name). What do these species have in common, and why might they be of interest over other insects? Feel free to do a brief internet search for more information if needed.[TIP: The `sort()` command can sort the output of the summary command...]
 
 ```{r}
+# Summary_CommonName <- summary(Neonics$Species.Common.Name)
+# sort(Summary_CommonName)
+summary(sort(Neonics$Species.Common.Name)) #embedded sort within summary
 
 ```
 
-> Answer:
+> Answer: The most commonly studied species are the Honey Bee, the Parasitic Wasp, the Buff Tailed Bumblebee, the Carniolan Honey Bee, the Bumble Bee, and the Italian Honeybee. All six belong to the Hymenoptera, which is a large order of insect species. They are all pollinators and play a crucial role in polinating agricultural crops.
 
 8.  Concentrations are always a numeric value. What is the class of `Conc.1..Author.` column in the dataset, and why is it not numeric?
 
 ```{r}
+class(Neonics$Conc.1..Author.) # class of Conc.1..Author. is a factor
 
 ```
 
-> Answer:
+> Answer: The column above is a factor, which
 
 ## Explore your data graphically (Neonics)
 
