@@ -139,7 +139,7 @@ ggplot(Neonics) +
 
 Interpret this graph. What are the most common test locations, and do they differ over time?
 
-> Answer:
+> Answer: The most common test locations are "Lab" and "Field natural." They differ a bit over time, but "Lab" has been the most common for approximately the last decade.
 
 11. Create a bar graph of Endpoint counts. What are the two most common end points, and how are they defined? Consult the ECOTOX_CodeAppendix for more information. 
 
@@ -174,7 +174,6 @@ unique(Litter$collectDate) # identifying unique dates sampled in August 2018
 13. Using the `unique` function, determine how many plots were sampled at Niwot Ridge. How is the information obtained from `unique` different from that obtained from `summary`?
 
 ```{r Niwot Ridge plots}
-View(Litter) # viewing data set
 unique(Litter$plotID) # unique values in the plotID column. There were 12 unique plots sampled
 summary(Litter$plotID) # summary of values in the plotID column 
 
