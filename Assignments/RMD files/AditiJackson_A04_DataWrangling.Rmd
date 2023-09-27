@@ -92,10 +92,16 @@ EPAair_PM25_2018_Subset1 <- select(EPAair_PM25_2018,Date, DAILY_AQI_VALUE, Site.
 EPAair_PM25_2019_Subset1 <- select(EPAair_PM25_2019,Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
 
 #5
-# Filling all cells in column AQS_PARAMETER_DESC with "PM2.5" for both PM2.5 data sets
-
+# Filling all cells in column AQS_PARAMETER_DESC with "PM2.5" for both PM2.5 data sets using mutate() function
+EPAair_PM25_2018_Subset1_MutAQS <- mutate(EPAair_PM25_2018_Subset1, AQS_PARAMETER_DESC = "PM2.5")
+EPAair_PM25_2019_Subset1_MutAQS <- mutate(EPAair_PM25_2019_Subset1, AQS_PARAMETER_DESC = "PM2.5")
 
 #6
+#saving processed data sets
+write.csv(EPAair_O3_2018_Subset1, row.names = FALSE, file = "./Data/Processed/EPAair_O3_NC2018_Processed.csv")
+write.csv(EPAair_O3_2019_Subset1, row.names = FALSE, file = "./Data/Processed/EPAair_O3_NC2019_Processed.csv")
+write.csv(EPAair_PM25_2018_Subset1_MutAQS, row.names = FALSE, file = "./Data/Processed/EPAair_PM25_2018_Processed.csv")
+write.csv(EPAair_PM25_2019_Subset1_MutAQS, row.names = FALSE, file = "./Data/Processed/EPAair_PM25_2019_Processed.csv")
 
 ```
 
