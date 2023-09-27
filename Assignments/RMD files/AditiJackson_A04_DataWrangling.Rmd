@@ -126,12 +126,35 @@ write.csv(EPAair_PM25_2019_Subset1_MutAQS, row.names = FALSE, file = "./Data/Pro
 
 11. Save your processed dataset with the following file name: "EPAair_O3_PM25_NC1819_Processed.csv"
 
-```{r}
-#7 
+```{r combining data sets}
+
+#7
+# combing all 4 data sets using rbind(), checked to make sure columns have same headers before combining
+EPAair_Combined <- rbind(EPAair_O3_2018_Subset1,EPAair_O3_2019_Subset1,EPAair_PM25_2018_Subset1_MutAQS,EPAair_PM25_2019_Subset1_MutAQS)
 
 #8 
+# using pipe with functions intersect and drop
+
+EPAair_Combined_summaries <- 
+  EPAair_Combined %>%
+    filter(Site.Name == "Linville Falls" | Site.Name == "Durham Armory"| Site.Name == "Leggett"| 
+           Site.Name == "Hattie Avenue"| Site.Name == "Clemmons Middle"| 
+           Site.Name == "Mendenhall School"| Site.Name == "Frying Pan Mountain"| 
+           Site.Name == "West Johnston Co."| Site.Name == "Garinger High School"| 
+           Site.Name == "Castle Hayne"| Site.Name == "Pitt Agri. Center"| Site.Name == "Bryson City"| 
+           Site.Name == "Millbrook School") %>%
+    group_by(Date,Site.Name,AQS_PARAMETER_DESC,COUNTY) %>%
+    summarise(meanAQI= mean(DAILY_AQI_VALUE),
+            meanLAT = mean(SITE_LATITUDE),
+            meanLONG = mean(SITE_LONGITUDE)) %>%
+    mutate(month = month(Date), year = year(Date))
+
+dim(EPAair_Combined_summaries)
 
 #9
+
+# you're taking mean from previous block of code
+# use AQS param description for names
 
 #10
 
