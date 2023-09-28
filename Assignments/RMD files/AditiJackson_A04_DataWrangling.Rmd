@@ -48,10 +48,14 @@ getwd()
 
 #1c 
 # reading in data sets, setting string columns to be read as factors
-EPAair_O3_2018 <- read.csv(file=here("Data/Raw/EPAair_O3_NC2018_raw.csv"),stringsAsFactors = TRUE)
-EPAair_O3_2019 <- read.csv(file=here("Data/Raw/EPAair_O3_NC2019_raw.csv"),stringsAsFactors = TRUE)
-EPAair_PM25_2018 <- read.csv(file=here("Data/Raw/EPAair_PM25_NC2018_raw.csv"),stringsAsFactors = TRUE)
-EPAair_PM25_2019 <- read.csv(file=here("Data/Raw/EPAair_PM25_NC2019_raw.csv"),stringsAsFactors = TRUE)
+EPAair_O3_2018 <- read.csv(file=here("Data/Raw/EPAair_O3_NC2018_raw.csv"),
+                           stringsAsFactors = TRUE)
+EPAair_O3_2019 <- read.csv(file=here("Data/Raw/EPAair_O3_NC2019_raw.csv"),
+                           stringsAsFactors = TRUE)
+EPAair_PM25_2018 <- read.csv(file=here("Data/Raw/EPAair_PM25_NC2018_raw.csv"),
+                             stringsAsFactors = TRUE)
+EPAair_PM25_2019 <- read.csv(file=here("Data/Raw/EPAair_PM25_NC2019_raw.csv"),
+                             stringsAsFactors = TRUE)
 
 #2 
 # reviewing specs of data sets using glimpse() function
@@ -82,26 +86,41 @@ EPAair_PM25_2018$Date <- mdy(EPAair_PM25_2018$Date)
 EPAair_PM25_2019$Date <- mdy(EPAair_PM25_2019$Date)
 
 #4
-# Selecting the following columns from each data set:Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE
-EPAair_O3_2018_Subset1 <- select(EPAair_O3_2018,Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
+# Selecting the following columns from each data set:Date, DAILY_AQI_VALUE, 
+## Site.Name, AQS_PARAMETER_DESC, COUNTY, SITE_LATITUDE, SITE_LONGITUDE
+EPAair_O3_2018_Subset1 <- select(EPAair_O3_2018,Date, DAILY_AQI_VALUE, 
+                                 Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
 
-EPAair_O3_2019_Subset1 <- select(EPAair_O3_2019,Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
+EPAair_O3_2019_Subset1 <- select(EPAair_O3_2019,Date, DAILY_AQI_VALUE,
+                                 Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
 
-EPAair_PM25_2018_Subset1 <- select(EPAair_PM25_2018,Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
+EPAair_PM25_2018_Subset1 <- select(EPAair_PM25_2018,Date, DAILY_AQI_VALUE,
+                                   Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
 
-EPAair_PM25_2019_Subset1 <- select(EPAair_PM25_2019,Date, DAILY_AQI_VALUE, Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
+EPAair_PM25_2019_Subset1 <- select(EPAair_PM25_2019,Date, DAILY_AQI_VALUE,
+                                   Site.Name, AQS_PARAMETER_DESC, COUNTY:SITE_LONGITUDE)
 
 #5
-# Filling all cells in column AQS_PARAMETER_DESC with "PM2.5" for both PM2.5 data sets using mutate() function
-EPAair_PM25_2018_Subset1_MutAQS <- mutate(EPAair_PM25_2018_Subset1, AQS_PARAMETER_DESC = "PM2.5")
-EPAair_PM25_2019_Subset1_MutAQS <- mutate(EPAair_PM25_2019_Subset1, AQS_PARAMETER_DESC = "PM2.5")
+# Filling all cells in column AQS_PARAMETER_DESC with "PM2.5" for both PM2.5 data 
+## sets using mutate() function
+EPAair_PM25_2018_Subset1_MutAQS <- mutate(EPAair_PM25_2018_Subset1, 
+                                          AQS_PARAMETER_DESC = "PM2.5")
+EPAair_PM25_2019_Subset1_MutAQS <- mutate(EPAair_PM25_2019_Subset1, 
+                                          AQS_PARAMETER_DESC = "PM2.5")
 
 #6
-#saving processed data sets
-write.csv(EPAair_O3_2018_Subset1, row.names = FALSE, file = "./Data/Processed/EPAair_O3_NC2018_Processed.csv")
-write.csv(EPAair_O3_2019_Subset1, row.names = FALSE, file = "./Data/Processed/EPAair_O3_NC2019_Processed.csv")
-write.csv(EPAair_PM25_2018_Subset1_MutAQS, row.names = FALSE, file = "./Data/Processed/EPAair_PM25_2018_Processed.csv")
-write.csv(EPAair_PM25_2019_Subset1_MutAQS, row.names = FALSE, file = "./Data/Processed/EPAair_PM25_2019_Processed.csv")
+#saving processed data sets in Processed folder
+write.csv(EPAair_O3_2018_Subset1, row.names = FALSE,
+          file = "./Data/Processed/EPAair_O3_NC2018_Processed.csv")
+
+write.csv(EPAair_O3_2019_Subset1, row.names = FALSE,
+          file = "./Data/Processed/EPAair_O3_NC2019_Processed.csv")
+
+write.csv(EPAair_PM25_2018_Subset1_MutAQS, row.names = FALSE,
+          file = "./Data/Processed/EPAair_PM25_2018_Processed.csv")
+
+write.csv(EPAair_PM25_2019_Subset1_MutAQS, row.names = FALSE,
+          file = "./Data/Processed/EPAair_PM25_2019_Processed.csv")
 
 ```
 
@@ -129,36 +148,58 @@ write.csv(EPAair_PM25_2019_Subset1_MutAQS, row.names = FALSE, file = "./Data/Pro
 ```{r combining data sets}
 
 #7
-# combing all 4 data sets using rbind(), checked to make sure columns have same headers before combining
-EPAair_Combined <- rbind(EPAair_O3_2018_Subset1,EPAair_O3_2019_Subset1,EPAair_PM25_2018_Subset1_MutAQS,EPAair_PM25_2019_Subset1_MutAQS)
+# combing all 4 data sets using rbind(), checked to make sure columns have same 
+## headers before combining
+EPAair_Combined <- 
+  rbind(EPAair_O3_2018_Subset1,
+        EPAair_O3_2019_Subset1,
+        EPAair_PM25_2018_Subset1_MutAQS,
+        EPAair_PM25_2019_Subset1_MutAQS)
 
 #8 
 # using pipe with functions intersect and drop
 
 EPAair_Combined_summaries <- 
   EPAair_Combined %>%
-    filter(Site.Name == "Linville Falls" | Site.Name == "Durham Armory"| Site.Name == "Leggett"| 
+    # choosing specific rows using filter()   
+    filter(Site.Name == "Linville Falls" | Site.Name == "Durham Armory"| 
+             Site.Name == "Leggett"| 
            Site.Name == "Hattie Avenue"| Site.Name == "Clemmons Middle"| 
            Site.Name == "Mendenhall School"| Site.Name == "Frying Pan Mountain"| 
            Site.Name == "West Johnston Co."| Site.Name == "Garinger High School"| 
-           Site.Name == "Castle Hayne"| Site.Name == "Pitt Agri. Center"| Site.Name == "Bryson City"| 
+           Site.Name == "Castle Hayne"| Site.Name == "Pitt Agri. Center"| 
+             Site.Name == "Bryson City"| 
            Site.Name == "Millbrook School") %>%
+    # using group_by() to create group based on multiple columns
     group_by(Date,Site.Name,AQS_PARAMETER_DESC,COUNTY) %>%
+    # generating means for AQI, LATITUDE, and LONGITUDE
     summarise(meanAQI= mean(DAILY_AQI_VALUE),
             meanLAT = mean(SITE_LATITUDE),
             meanLONG = mean(SITE_LONGITUDE)) %>%
-    mutate(month = month(Date), year = year(Date))
+   # using mutate() with lubridate commands to add columns for month and year
+   mutate(month = month(Date), year = year(Date))
 
-dim(EPAair_Combined_summaries)
+# checking dimensions of newly created data frame: 14,752 rows &  9 columns
+dim(EPAair_Combined_summaries) 
 
 #9
-
-# you're taking mean from previous block of code
-# use AQS param description for names
+# spreading data such that AQI values for ozone and PM2.5 are in separate columns.
+EPAair_Combined_Spread <- pivot_wider(EPAair_Combined_summaries, 
+                                      names_from = AQS_PARAMETER_DESC, 
+                                      values_from = AQS_PARAMETER_DESC)
 
 #10
+# calling up dimensions of newly cleaned data: 14,650 rows, 10 columns
+
+dim(EPAair_Combined_Spread) 
 
 #11
+#saving processed and cleaned data set to Processed folder
+
+write.csv(EPAair_Combined_Spread,
+          row.names = FALSE,
+          file = "./Data/Processed/EPAair_O3_PM25_NC1819_Processed.csv")
+
 
 ```
 
@@ -169,16 +210,26 @@ dim(EPAair_Combined_summaries)
 
 13. Call up the dimensions of the summary dataset.
 
-```{r}
+```{r summary tables}
 
 #12
-
+EPAair_Combined_SumTab <- 
+  EPAair_Combined_Spread %>%
+  # using group_by to sort data by multiple columns
+  group_by(Site.Name,month,year) %>%
+  # generating mean values for Ozone and PM2.5
+  summarise(meanAQI_Ozone=mean(meanAQI),
+            meanAQI_PM25=mean(meanAQI)) %>%
+  # dropping rows with N/A values in meanAQI_Ozone column
+  drop_na(meanAQI_Ozone)
 
 #13
+# calling up dimensions of new summary table: 308 rows, 5 columns
+dim(EPAair_Combined_SumTab) 
 
 
 ```
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
 
-> Answer: 
+> Answer: Both "drop_na" and "na.omit" are used for dealing with missing values. In this case we used "drop_na" because we wanted to remove only the rows with missing values for "mean Ozone AQI." Na.omit would have [DONE X].
