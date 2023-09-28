@@ -189,7 +189,7 @@ EPAair_Combined_Spread <- pivot_wider(EPAair_Combined_summaries,
                                       values_from = meanAQI)
 
 #10
-# calling up dimensions of newly cleaned data: 14,650 rows, 10 columns
+# calling up dimensions of newly cleaned data: 8,976 rows, 9 columns
 
 dim(EPAair_Combined_Spread) 
 
