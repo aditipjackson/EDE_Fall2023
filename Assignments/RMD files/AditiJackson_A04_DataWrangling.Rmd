@@ -186,7 +186,7 @@ dim(EPAair_Combined_summaries)
 # spreading data such that AQI values for ozone and PM2.5 are in separate columns.
 EPAair_Combined_Spread <- pivot_wider(EPAair_Combined_summaries, 
                                       names_from = AQS_PARAMETER_DESC, 
-                                      values_from = AQS_PARAMETER_DESC)
+                                      values_from = meanAQI)
 
 #10
 # calling up dimensions of newly cleaned data: 14,650 rows, 10 columns
@@ -218,13 +218,13 @@ EPAair_Combined_SumTab <-
   # using group_by to sort data by multiple columns
   group_by(Site.Name,month,year) %>%
   # generating mean values for Ozone and PM2.5
-  summarise(meanAQI_Ozone=mean(meanAQI),
-            meanAQI_PM25=mean(meanAQI)) %>%
+  summarise(meanAQI_Ozone=mean(Ozone),
+            meanAQI_PM25=mean(PM2.5)) %>%
   # dropping rows with N/A values in meanAQI_Ozone column
   drop_na(meanAQI_Ozone)
 
 #13
-# calling up dimensions of new summary table: 308 rows, 5 columns
+# calling up dimensions of new summary table: 182 rows, 5 columns
 dim(EPAair_Combined_SumTab) 
 
 
@@ -232,4 +232,4 @@ dim(EPAair_Combined_SumTab)
 
 14. Why did we use the function `drop_na` rather than `na.omit`?
 
-> Answer: Both "drop_na" and "na.omit" are used for dealing with missing values. In this case we used "drop_na" because we wanted to remove only the rows with missing values for "mean Ozone AQI." Na.omit would have [DONE X].
+> Answer: Both "drop_na" and "na.omit" are used for dealing with missing values. In this case we used "drop_na" because we wanted to remove only the rows with missing values for a specific column ("mean Ozone AQI"). Na.omit would have dropped any instance of an N/A value in the entire dataframe.
