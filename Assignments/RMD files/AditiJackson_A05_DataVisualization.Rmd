@@ -38,6 +38,7 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
 # install.packages("here") # helps with controlling relative path
 # install.packages("cowplot") # helps with data visualization
 # install.packages("ggplot2") # helps with data visualization
+# install.packages("ggthemes") # helps with themes
 
 # loading Packages
 library(tidyverse)
@@ -45,6 +46,7 @@ library(lubridate)
 library(here)
 library(cowplot)
 library(ggplot2)
+library(ggthemes)
 
 
 # verifying working directory is "ENV872 Setup (Local)"
@@ -79,7 +81,7 @@ NiwotRidge_Litter$collectDate <- ymd(NiwotRidge_Litter$collectDate) # changing t
 my_theme <- theme_base()  + 
  theme(
   axis.text = element_text(color = "black"),# setting axis text color 
-  plot.title = element_text(color = "black") # setting title text color
+  plot.title = element_text(color = "black"),# setting title text color
   panel.background = element_rect(fill="lightyellow",color="blue"),
   legend.background = element_rect(color='grey',fill = 'white'),# setting legend color
   legend.position = 'bottom', # setting position of legend to bottom
@@ -98,13 +100,20 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 ```{r plot total P vs PO4}
 #4
 # plotting total phosphorus by phosphate
-Phos_Plot <- ggplot(PeterPaul_Lakes,aes(x = tp_ug, y = po4, color = lakename)) + # setting separate aesthetics for tp_ug and po4, coloring points by lakename
-  geom_point() + # ploting points
-  geom_smooth(method = 'lm', color = "black") + # adding line of best fit and coloring black
-  xlim(0,150) + # setting x-limit 
-  ylim(0,50) + # setting y-limit 
-  labs(x="Phosphorus",y="Phosphate",color="Legend") # relabeling axes and renaming legend
- 
+
+# setting separate aesthetics for tp_ug and po4, coloring points by lakename
+Phos_Plot <- ggplot(PeterPaul_Lakes,aes(x = tp_ug, y = po4, color = lakename)) + 
+  # ploting points
+  geom_point() + 
+  # adding line of best fit and coloring black
+  geom_smooth(method = 'lm', color = "black") + 
+  # setting x-limit 
+  xlim(0,150) + 
+  # setting y-limit
+  ylim(0,50) + 
+  # relabeling axes and renaming legend 
+  labs(x="Phosphorus",y="Phosphate",color="Legend") 
+
 # printing Phos_Plot
 print(Phos_Plot)
   
@@ -122,7 +131,10 @@ Tip:
 
 # (a) 
 # plotting temperature
-Temp_BoxPlot <- ggplot(PeterPaul_Lakes,aes(x = factor(PeterPaul_Lakes$month,levels=1:12,labels=month.abb), y = temperature_C, color = lakename)) + # setting separate aesthetics, changing month numbers to month abbreviations, coloring points by lakename
+Temp_BoxPlot <- ggplot(PeterPaul_Lakes,aes(
+  # setting separate aesthetics, changing month numbers to month abbreviations
+  x = factor(PeterPaul_Lakes$month,levels=1:12,labels=month.abb), 
+  y = temperature_C, color = lakename)) + # coloring points by lakename
   geom_boxplot() + # plotting as box plot
   labs(x=" ", y="Temperature",color="Legend") # labeling axes and renaming legend
 
@@ -132,7 +144,10 @@ print(Temp_BoxPlot)
 
 # (b) 
 # plotting TP
-TP_BoxPlot <- ggplot(PeterPaul_Lakes,aes(x = factor(PeterPaul_Lakes$month,levels=1:12,labels=month.abb), y = tp_ug, color = lakename)) + # setting separate aesthetics, changing month numbers to month abbreviations, coloring points by lakename
+TP_BoxPlot <- ggplot(PeterPaul_Lakes,aes(
+  # setting separate aesthetics, changing month numbers to month abbreviations
+  x = factor(PeterPaul_Lakes$month,levels=1:12,labels=month.abb), 
+  y = tp_ug, color = lakename)) + # coloring points by lakename
   geom_boxplot()+ # plotting as box plot
   labs(x= " ", y="TP",color="Legend") # labeling axes and renaming legend
 
@@ -142,7 +157,10 @@ print(TP_BoxPlot)
 
 # (c) 
 # plotting temperature
-TN_BoxPlot <- ggplot(PeterPaul_Lakes,aes(x = factor(PeterPaul_Lakes$month,levels=1:12,labels=month.abb), y = tn_ug, color = lakename)) + # setting separate aesthetics, changing month numbers to month abbreviations, coloring points by lakename
+TN_BoxPlot <- ggplot(PeterPaul_Lakes,aes(
+  # setting separate aesthetics, changing month numbers to month abbreviations,
+  x = factor(PeterPaul_Lakes$month,levels=1:12,labels=month.abb), 
+  y = tn_ug, color = lakename)) + # coloring points by lakename
   geom_boxplot()+ # plotting as box plot
   labs(x=" ", y="TN",color="Legend") # labeling axes and renaming legend
   
@@ -179,16 +197,19 @@ NiwotRidge_Needles <-
     filter(functionalGroup=="Needles")
 
 # using new Needles data frame to create plot
-Needles_Plot_Q6 <- ggplot(NiwotRidge_Needles, aes(x=collectDate, y=dryMass, color=nlcdClass))+
+Needles_Plot_Q6 <- ggplot(NiwotRidge_Needles, 
+                          aes(x=collectDate, y=dryMass, color=nlcdClass))+
   geom_point()+
   labs(x="Date",y="Dry Mass",color="Legend") # relabeling axes
 print(Needles_Plot_Q6) # printing new plot
 
 #7 
 # plotting needles separated by needle class
-Needles_Plot_Q7 <- ggplot(NiwotRidge_Needles,aes(x=collectDate, y=dryMass))+
+Needles_Plot_Q7 <- ggplot(NiwotRidge_Needles,
+                          aes(x=collectDate, y=dryMass))+
   geom_point()+
-  facet_wrap(vars(nlcdClass))+ # adding "facet_wrap" command to separate data by class
+  # adding "facet_wrap" command to separate data by class
+  facet_wrap(vars(nlcdClass))+ 
   labs(x="Date",y="Dry Mass") # relabeling axes
 print(Needles_Plot_Q7)
 
