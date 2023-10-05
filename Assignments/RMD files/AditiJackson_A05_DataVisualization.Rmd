@@ -36,8 +36,8 @@ This exercise accompanies the lessons in Environmental Data Analytics on Data Vi
 # install.packages("tidyverse") # helps with data manipulation and visualization
 # install.packages("lubridate") # helps with manipulating date objects
 # install.packages("here") # helps with controlling relative path
-# install.packages("cowplot")
-# install.packages("ggplot2")
+# install.packages("cowplot") # helps with data visualization
+# install.packages("ggplot2") # helps with data visualization
 
 # loading Packages
 library(tidyverse)
@@ -57,12 +57,12 @@ NiwotRidge_Litter <- read.csv(here("Data/Processed_KEY/NEON_NIWO_Litter_mass_tra
 #2 
 
 # converting sampledate column in Peter Paul data to date format
-class(PeterPaul_Lakes$sampledate) # imported as factor
-PeterPaul_Lakes$sampledate <- ymd(PeterPaul_Lakes$sampledate)
+class(PeterPaul_Lakes$sampledate) # column imported as factor
+PeterPaul_Lakes$sampledate <- ymd(PeterPaul_Lakes$sampledate) # changing to date
 
 # converting collectDate column in Niwot Ridge data to date format
-class(NiwotRidge_Litter$collectDate) # imported as factor
-NiwotRidge_Litter$collectDate <- ymd(NiwotRidge_Litter$collectDate)
+class(NiwotRidge_Litter$collectDate) # column imported as factor
+NiwotRidge_Litter$collectDate <- ymd(NiwotRidge_Litter$collectDate) # changing to date
 
 ```
 ## Define your theme
@@ -75,13 +75,15 @@ NiwotRidge_Litter$collectDate <- ymd(NiwotRidge_Litter$collectDate)
 
 ```{r build plot theme}
 #3
+# creating a theme
 my_theme <- theme_base()  + 
  theme(
-  axis.text = element_text(color = "black"), # changing text color 
+  axis.text = element_text(color = "black"),# setting axis text color 
+  plot.title = element_text(color = "black") # setting title text color
   panel.background = element_rect(fill="lightyellow",color="blue"),
-  legend.background = element_rect(color='grey',fill = 'white'),# changing legend color
-  legend.position = 'bottom', # changing position of legend to bottom
-  legend.justification = "center") # centering legend
+  legend.background = element_rect(color='grey',fill = 'white'),# setting legend color
+  legend.position = 'bottom', # setting position of legend to bottom
+  legend.justification = "center") # centering legend 
 
 # setting theme as default 
 theme_set(my_theme) 
@@ -99,8 +101,8 @@ For numbers 4-7, create ggplot graphs and adjust aesthetics to follow best pract
 Phos_Plot <- ggplot(PeterPaul_Lakes,aes(x = tp_ug, y = po4, color = lakename)) + # setting separate aesthetics for tp_ug and po4, coloring points by lakename
   geom_point() + # ploting points
   geom_smooth(method = 'lm', color = "black") + # adding line of best fit and coloring black
-  xlim(0,150) + # setting x-limit as 150
-  ylim(0,50) + # setting y-limit as 50
+  xlim(0,150) + # setting x-limit 
+  ylim(0,50) + # setting y-limit 
   labs(x="Phosphorus",y="Phosphate",color="Legend") # relabeling axes and renaming legend
  
 # printing Phos_Plot
@@ -120,10 +122,9 @@ Tip:
 
 # (a) 
 # plotting temperature
-Temp_BoxPlot <- ggplot(PeterPaul_Lakes,aes(x = factor(PeterPaul_Lakes$month,levels=1:12,labels=month.abb), y = temperature_C, color = lakename)) + # setting separate aesthetics, coloring points by lakename
-  geom_boxplot() + # ploting as box plot
-  labs(x=" ", y="Temperature")+ # labeling axes
-  labs(color="Legend") # renmaing legend
+Temp_BoxPlot <- ggplot(PeterPaul_Lakes,aes(x = factor(PeterPaul_Lakes$month,levels=1:12,labels=month.abb), y = temperature_C, color = lakename)) + # setting separate aesthetics, changing month numbers to month abbreviations, coloring points by lakename
+  geom_boxplot() + # plotting as box plot
+  labs(x=" ", y="Temperature",color="Legend") # labeling axes and renaming legend
 
 # printing Temp_BoxPlot
 print(Temp_BoxPlot)
@@ -131,10 +132,9 @@ print(Temp_BoxPlot)
 
 # (b) 
 # plotting TP
-TP_BoxPlot <- ggplot(PeterPaul_Lakes,aes(x = factor(PeterPaul_Lakes$month,levels=1:12,labels=month.abb), y = tp_ug, color = lakename)) + # setting separate aesthetics, coloring points by lakename
-  geom_boxplot()+ # ploting as box plot
-  labs(x= " ", y="TP") # labeling axes
-  labs(color="Legend") # renmaing legend
+TP_BoxPlot <- ggplot(PeterPaul_Lakes,aes(x = factor(PeterPaul_Lakes$month,levels=1:12,labels=month.abb), y = tp_ug, color = lakename)) + # setting separate aesthetics, changing month numbers to month abbreviations, coloring points by lakename
+  geom_boxplot()+ # plotting as box plot
+  labs(x= " ", y="TP",color="Legend") # labeling axes and renaming legend
 
 # printing TP_BoxPlot
 print(TP_BoxPlot)
@@ -142,10 +142,9 @@ print(TP_BoxPlot)
 
 # (c) 
 # plotting temperature
-TN_BoxPlot <- ggplot(PeterPaul_Lakes,aes(x = factor(PeterPaul_Lakes$month,levels=1:12,labels=month.abb), y = tn_ug, color = lakename)) + # setting separate aesthetics, coloring points by lakename
-  geom_boxplot()+ # ploting as box plot
-  labs(x=" ", y="TN") # labeling axes
-  labs(color="Legend") # renmaing legend
+TN_BoxPlot <- ggplot(PeterPaul_Lakes,aes(x = factor(PeterPaul_Lakes$month,levels=1:12,labels=month.abb), y = tn_ug, color = lakename)) + # setting separate aesthetics, changing month numbers to month abbreviations, coloring points by lakename
+  geom_boxplot()+ # plotting as box plot
+  labs(x=" ", y="TN",color="Legend") # labeling axes and renaming legend
   
 # printing TN_BoxPlot
 print(TN_BoxPlot)
@@ -165,7 +164,7 @@ print(CombinedPlot)
 
 Question: What do you observe about the variables of interest over seasons and between lakes? 
 
-> Answer: The data is concerntrated in the months of May through October.
+> Answer: The data is concentrated between May and September, spanning end of Spring to early Fall. The variables of interest appear to exhibit similar patterns between lakes over these seasons. For instance, mean temperature (C) appears to be very almost the same between the two lakes with similar IQRs. From the graph it appears that the TP and TN variables between the two lakes also exhibit means and spreads.
 
 6. [Niwot Ridge] Plot a subset of the litter dataset by displaying only the "Needles" functional group. Plot the dry mass of needle litter by date and separate by NLCD class with a color aesthetic. (no need to adjust the name of each land use)
 
@@ -174,7 +173,7 @@ Question: What do you observe about the variables of interest over seasons and b
 ```{r Plot litter}
 #6
 
-# filtering data set for just functional group == Needles and defining new data frame
+# filtering data set for just functional group == Needles, defining new data frame
 NiwotRidge_Needles <-
   NiwotRidge_Litter %>%
     filter(functionalGroup=="Needles")
@@ -183,18 +182,17 @@ NiwotRidge_Needles <-
 Needles_Plot_Q6 <- ggplot(NiwotRidge_Needles, aes(x=collectDate, y=dryMass, color=nlcdClass))+
   geom_point()+
   labs(x="Date",y="Dry Mass",color="Legend") # relabeling axes
-print(Needles_Plot_Q6)
+print(Needles_Plot_Q6) # printing new plot
 
 #7 
-# plotting question 6, but separated by needle class
+# plotting needles separated by needle class
 Needles_Plot_Q7 <- ggplot(NiwotRidge_Needles,aes(x=collectDate, y=dryMass))+
   geom_point()+
-  # adding "facet_wrap" command to separate data by class
-  facet_wrap(vars(nlcdClass))+
-  labs(x="Date",y="Dry Mass")
+  facet_wrap(vars(nlcdClass))+ # adding "facet_wrap" command to separate data by class
+  labs(x="Date",y="Dry Mass") # relabeling axes
 print(Needles_Plot_Q7)
 
 ```
 Question: Which of these plots (6 vs. 7) do you think is more effective, and why? 
 
-> Answer: I think plot 7 is more effective because it is easier to see the changes in ncldClass by year.
+> Answer: I think plot 7 is more effective because it is easier to see year-over-year changes for each needle class. In other words, I'm better able to discern a trend for a particular class and compare that to the trend of another class. With plot 6, the data blends together and it takes more effort to extract patterns in the data.
