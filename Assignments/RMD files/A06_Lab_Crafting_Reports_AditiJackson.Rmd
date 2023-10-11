@@ -3,6 +3,7 @@ title: 'A06 - Crafting Reports'
 author: "Aditi Jackson" 
 date: "Fall 2023"
 output: pdf_document
+toc: true
 ---
 
 ## Objectives:
@@ -39,10 +40,10 @@ Item Name     | Value
 
 Set the following R code chunk so that it runs when knit, but no messages, errors, or any output is shown. The code itself, however, should be displayed.
 
-```{r project.setup, message=FALSE,error=FALSE,echo=FALSE}
+```{r project.setup, message=FALSE,error=FALSE,results='hide'}
 # added "message=FALSE" so that no messages show up in knitted doc
 # added "error=FALSE" so that no errors show up in knitted doc
-# added "echo=FALSE'" so that code output is not displayed in knitted doc
+# added "results='hide'" so that code output is not displayed in knitted doc
 
 #Import libraries
 library(tidyverse);library(lubridate);library(here);library(knitr);library(ggplot2)
@@ -110,6 +111,10 @@ Create two separate code chunks that create boxplots of the distribution of Ozon
 
 ```{r 2018 plot, echo=FALSE,warning=FALSE,fig.align='left',fig.height=3,fig.width=4,fig.cap="Monthly Ozone, 2018"}
 
+# added "echo=FALSE", "warning=FALSE", "fig.align='left'","fig.height=3='left'"
+## "fig.width=4='left'", "fig_cap="Monthly Ozone, 2018" 
+
+
 epa_data_2018 <- filter(epa_data,Year=="2018")
 
 ggplot(epa_data_2018,aes(
@@ -122,6 +127,9 @@ ggplot(epa_data_2018,aes(
 ```
 
 ```{r 2019 plot,echo=FALSE,warning=FALSE,fig.align='left',fig.height=3,fig.width=4,fig.cap="Monthly Ozone, 2019"}
+
+# added "echo=FALSE", "warning=FALSE", "fig.align='left'","fig.height=3='left'"
+## "fig.width=4='left'", "fig_cap="Monthly Ozone, 2019" 
 
 epa_data_2019 <- filter(epa_data,Year=="2019")
 
