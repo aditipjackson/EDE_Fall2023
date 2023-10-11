@@ -39,10 +39,10 @@ Item Name     | Value
 
 Set the following R code chunk so that it runs when knit, but no messages, errors, or any output is shown. The code itself, however, should be displayed.
 
-```{r project.setup, message=FALSE,error=FALSE,results='hide'}
+```{r project.setup, message=FALSE,error=FALSE,echo=FALSE}
 # added "message=FALSE" so that no messages show up in knitted doc
 # added "error=FALSE" so that no errors show up in knitted doc
-# added "results='hide'" so that code output is not displayed in knitted doc
+# added "echo=FALSE'" so that code output is not displayed in knitted doc
 
 #Import libraries
 library(tidyverse);library(lubridate);library(here);library(knitr);library(ggplot2)
@@ -106,7 +106,9 @@ kable(summary_Ozone,
 
 Create two separate code chunks that create boxplots of the distribution of Ozone levels by month using, one for only records collected in 2018 and one for records in 2019. Customize the chunk options such that the final figures are displayed but not the code used to generate the figures. In addition, align the plots on the left side of the page and set the figure heights so both plots fit on the same page with minimal space remaining. Lastly, add a `fig.cap` chunk option to add a caption (title) to your plot that will display underneath the figure.
 
-```{r 2018 plot, echo=FALSE,warning=FALSE,fig.align='left'}
+\newpage
+
+```{r 2018 plot, echo=FALSE,warning=FALSE,fig.align='left',fig.height=3,fig.width=4,fig.cap="Monthly Ozone, 2018"}
 
 epa_data_2018 <- filter(epa_data,Year=="2018")
 
@@ -119,7 +121,7 @@ ggplot(epa_data_2018,aes(
 
 ```
 
-```{r 2019 plot,echo=FALSE,warning=FALSE,fig.align='left'}
+```{r 2019 plot,echo=FALSE,warning=FALSE,fig.align='left',fig.height=3,fig.width=4,fig.cap="Monthly Ozone, 2019"}
 
 epa_data_2019 <- filter(epa_data,Year=="2019")
 
@@ -127,11 +129,12 @@ ggplot(epa_data_2019,aes(
   x=factor(epa_data_2019$Month,levels=1:12,labels=month.abb),
   y=Ozone))+
   geom_boxplot()+
-  labs(x="Month",y="Concentration (mu g/m^3)",title="Recorded Ozone by Month (2019)")
+  labs(x="Month",y="Concentration ($\\mu g/m^3$)",title="Recorded Ozone by Month (2019)")
 
 ```
 
 ---
+
 \newpage
 
 ## Task 5: Knit and submit.
