@@ -121,7 +121,10 @@ ggplot(epa_data_2018,aes(
   x=factor(epa_data_2018$Month,levels=1:12,labels=month.abb),
   y=Ozone))+
   geom_boxplot()+
-  labs(x="Month",y="Concentration ($\\mu g/m^3$)",title="Recorded Ozone by Month (2018)")
+  labs(
+    x="Month",
+    y=expression(paste("Concentration (", mu,"/g", m^{3},")")) ,
+    title="Recorded Ozone by Month (2018)")
   
 
 ```
@@ -137,7 +140,9 @@ ggplot(epa_data_2019,aes(
   x=factor(epa_data_2019$Month,levels=1:12,labels=month.abb),
   y=Ozone))+
   geom_boxplot()+
-  labs(x="Month",y="Concentration ($\\mu g/m^3$)",title="Recorded Ozone by Month (2019)")
+  labs(x="Month",
+       y=expression(paste("Concentration (", mu,"/g", m^{3},")")),
+       title="Recorded Ozone by Month (2019)")
 
 ```
 
