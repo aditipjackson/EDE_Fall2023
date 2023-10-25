@@ -60,7 +60,7 @@ my_theme <- theme_base()  + theme(
   legend.justification = "center") # centering legend 
 
 # setting theme as default
-theme_set(mytheme)
+theme_set(my_theme)
 
 ```
 
@@ -81,8 +81,7 @@ Ha: Mean lake temperature changes with depth (M != 0)
 
 ```{r scatterplot}
 #4
-
-# addinf a month column to the dataset
+# adding a month column to the dataset
 LakeData_Raw_Month <- mutate(LakeData_Raw, month = month(sampledate)) 
 
 #wrangling data using a pipe function
@@ -96,29 +95,37 @@ LakeData_July <-
     drop_na()
 
 #5
-
+Lake_Scatter <- ggplot(LakeData_July,aes(x=depth,y=temperature_C))+
+  geom_point()+
+  geom_smooth(method=lm)+
+  ylim(0,35)+
+  labs(x="Depth",y="Temperature (C)",Title="Temperature by Depth")
+  
+Lake_Scatter
 
 ```
 
 
 6. Interpret the figure. What does it suggest with regards to the response of temperature to depth? Do the distribution of points suggest about anything about the linearity of this trend?
 
-> Answer: 
-
+> Answer: There appears to be an inverse relationship between temperature and depth. For an increase in depth, temperature decreases. [ADD COMMENTS ON LINEARITY.]
 
 7. Perform a linear regression to test the relationship and display the results
 
 ```{r linear.regression}
 #7
+# performing linear regression of temp and depth
+Linear_Regression_Q7 <- lm(
+  LakeData_July$temperature_C ~ LakeData_July$depth)
 
+# displaying regression results
+summary(Linear_Regression_Q7)
 
 ```
 
-
 8. Interpret your model results in words. Include how much of the variability in temperature is explained by changes in depth, the degrees of freedom on which this finding is based, and the statistical significance of the result. Also mention how much temperature is predicted to change for every 1m change in depth. 
 
-> Answer:
-
+> Answer: Per the r-squared value, 73.87% of the variability in temperature is explained by changes in depth. [ADD DEGREES OF FREEDOM, ETC.]
 
 ---
 
