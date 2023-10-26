@@ -52,7 +52,7 @@ LakeData_Raw$sampledate <- mdy(LakeData_Raw$sampledate)
 
 #2
 # building theme
-my_theme <- theme_base()  + theme(
+my_theme <- theme_base(base_size = 10)  + theme(
   axis.text = element_text(color = "black"),# setting axis text color 
   plot.title = element_text(color = "black"),# setting title text color
   panel.background = element_rect(fill="lightyellow",color="blue"),
