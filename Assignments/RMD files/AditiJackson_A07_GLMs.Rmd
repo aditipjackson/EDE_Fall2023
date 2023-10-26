@@ -44,7 +44,8 @@ library(ggplot2)
 library(ggthemes)
 
 # importing data
-LakeData_Raw <- read.csv("Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv",stringsAsFactors = TRUE)
+LakeData_Raw <- read.csv("Data/Raw/NTL-LTER_Lake_ChemistryPhysics_Raw.csv",
+                         stringsAsFactors = TRUE)
 
 # converting date column to date objects with lubridate
 LakeData_Raw$sampledate <- mdy(LakeData_Raw$sampledate)
@@ -142,7 +143,7 @@ Let's tackle a similar question from a different approach. Here, we want to expl
 ```{r temperature.model}
 #9
 
-# setting up function that considers year4, daynum, and depth as explanatory variables on temperature
+# setting up function that considers year4, daynum, and depth as explanatory variables
 AIC_Temp <- lm(data = LakeData_July,temperature_C ~ year4 + daynum + depth)
 
 # calling AIC in step-wise algorithm
@@ -183,7 +184,6 @@ summary(ANOVA_Temp_asLM)
 
 > Answer: Since the p-value (2e-16) is less than 0.001, we reject the null hypothesis (that there is no significnat difference in mean temperature) in favor of the alternative that there is a significant difference in mean temperature among the lakes.
 
-
 14. Create a graph that depicts temperature by depth, with a separate color for each lake. Add a geom_smooth (method = "lm", se = FALSE) for each lake. Make your points 50 % transparent. Adjust your y axis limits to go from 0 to 35 degrees. Clean up your graph to make it pretty. 
 
 ```{r scatterplot.2}
@@ -195,7 +195,11 @@ Lake_Plot_Q14 <- ggplot(LakeData_July,aes(
   geom_point(alpha=0.5)+ # adding transparency
   geom_smooth(method=lm, SE=FALSE)+ # adding geom smooth
   ylim(0,35)+ # adjusting axis
-  labs(x="Depth (m)",y="Temperature (C)",title="Temperature by Depth",color="Lake Name") # adding plot title and axis labels
+  # adding plot title and axis labels
+  labs(x="Depth (m)",
+       y="Temperature (C)",
+       title="Temperature by Depth",
+       color="Lake Name") 
 
 # displaying results
 Lake_Plot_Q14
@@ -227,14 +231,17 @@ LakeTemp_Tukey_Test
 ```{r t.test}
 
 # filtering data for just Crampton and Ward lakes
-LakeData_July_Crampton_Ward <- filter(LakeData_July,lakename=="Crampton Lake"|lakename=="Ward Lake")
+LakeData_July_Crampton_Ward <- filter(LakeData_July,lakename=="Crampton Lake"|
+        lakename=="Ward Lake")
 
 # stating null and alternative hypotheses
 ## H0: mu == 0
 ## Ha: mu != 0
 
 # running 2-sample T-test
-Crampton_Ward_2WTTEST <- t.test(LakeData_July_Crampton_Ward$temperature_C ~ LakeData_July_Crampton_Ward$lakename)
+Crampton_Ward_2WTTEST <- t.test(
+  LakeData_July_Crampton_Ward$temperature_C ~ 
+    LakeData_July_Crampton_Ward$lakename)
 
 # displaying result
 Crampton_Ward_2WTTEST
