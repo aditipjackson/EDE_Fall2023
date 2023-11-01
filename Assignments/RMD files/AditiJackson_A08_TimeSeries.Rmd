@@ -84,15 +84,15 @@ GaringerOzone <- rbind(EPA_2010,EPA_2011,EPA_2012,EPA_2013,EPA_2014,EPA_2015,EPA
 ```{r}
 # 3
 # converting date column to date object
-GaringerOzone$Date <- ymd(GaringerOzone$Date)
+GaringerOzone$Date <- as.Date(GaringerOzone$Date,format="%m/%d/%Y")
 
 # 4
 # selecting columns to create abbreviated data set
-GaringerOzone_Subset <- select(GaringerOzone,
+GO_Sub <- select(GaringerOzone,
   Date,Daily.Max.8.hour.Ozone.Concentration, DAILY_AQI_VALUE)
 
 # 5
-# creating objects for start and end date
+# creating variables for start and end date
 start_date <- as.Date("2010-01-01")
 end_date <- as.Date("2019-12-31")
 
@@ -103,7 +103,9 @@ Days <- as.data.frame(seq(start_date, end_date, by = 1))
 colnames(Days) <- c("Date")
 
 # 6
-
+# Using left join to combine Days and GaringerOzone_Subset data frames.
+## Missing dates have been added and values populated with N/A 
+GO_Sub_Complete <- left_join(Days,GO_Sub)
 
 ```
 
@@ -113,10 +115,15 @@ colnames(Days) <- c("Date")
 
 ```{r}
 #7
+# plotting ozone concentrations over time
+ggplot(GO_Sub_Complete,aes(x=Date,y=Daily.Max.8.hour.Ozone.Concentration))+
+  geom_line()+
+  geom_smooth(method="lm")+
+  labs(x = "", y = "Ozone Concentration (ppm)")
 
 ```
 
->Answer:
+>Answer:The plot suggests a gradual decrease in Ozone concentrations over time. This can be seen by the slighly negative slope of the trend line.
 
 ## Time Series Analysis
 
@@ -126,16 +133,33 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 
 ```{r}
 #8
+summary(GO_Sub_Complete$Daily.Max.8.hour.Ozone.Concentration)
+
+# using a linear interpolation to fill in missing daily data for ozone concentration
+GO_LinInterp <- 
+  GO_Sub_Complete %>%
+  mutate(Daily.Max.8.hour.Ozone.Concentration = na.approx(Daily.Max.8.hour.Ozone.Concentration))
+   
+# checking that NAs in column were filled in
+summary(GO_LinInterp$Daily.Max.8.hour.Ozone.Concentration)
+
 
 ```
 
-> Answer: 
+> Answer: We used a linear interpolation and not spline or piecewise because the data fits a linear trend. For spline, the data would need to be quadratic and for piecewise the missing data would be assumed to be equal to its "nearest neighbor," which would not give us as good of a fit as using linear interpolation.
 
 
 9. Create a new data frame called `GaringerOzone.monthly` that contains aggregated data: mean ozone concentrations for each month. In your pipe, you will need to first add columns for year and month to form the groupings. In a separate line of code, create a new Date column with each month-year combination being set as the first day of the month (this is for graphing purposes only)
 
 ```{r}
 #9
+GaringerOzone.monthly <- GO_LinInterp %>%
+  mutate(Month = month(Date), Year = year(Date)) %>%
+  group_by(Month, Year) %>%
+  Date_M_Y = as.yearmon(paste(month, day, year), "%Y %b") 
+
+  #use the zoo as.yearmon() to get the year and month only
+
 
 ```
 
