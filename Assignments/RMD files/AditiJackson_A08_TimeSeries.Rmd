@@ -54,20 +54,43 @@ library(here)
 #2
 
 # importing data
-EPA_2010 <- read.csv("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2010_raw.csv", stringsAsFactors = TRUE)
-EPA_2011 <- read.csv("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2011_raw.csv", stringsAsFactors = TRUE)
-EPA_2012 <- read.csv("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2012_raw.csv", stringsAsFactors = TRUE)
-EPA_2013 <- read.csv("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2013_raw.csv", stringsAsFactors = TRUE)
-EPA_2014 <- read.csv("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2014_raw.csv", stringsAsFactors = TRUE)
-EPA_2015 <- read.csv("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2015_raw.csv", stringsAsFactors = TRUE)
-EPA_2016 <- read.csv("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2016_raw.csv", stringsAsFactors = TRUE)
-EPA_2017 <- read.csv("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2017_raw.csv", stringsAsFactors = TRUE)
-EPA_2018 <- read.csv("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2018_raw.csv", stringsAsFactors = TRUE)
-EPA_2019 <- read.csv("Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2019_raw.csv", stringsAsFactors = TRUE)
+EPA_2010 <- 
+  read.csv(
+    "Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2010_raw.csv",
+    stringsAsFactors = TRUE)
+EPA_2011 <- 
+  read.csv(
+    "Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2011_raw.csv",
+    stringsAsFactors = TRUE)
+EPA_2012 <- read.csv(
+  "Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2012_raw.csv",
+  stringsAsFactors = TRUE)
+EPA_2013 <- read.csv(
+  "Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2013_raw.csv",
+  stringsAsFactors = TRUE)
+EPA_2014 <- read.csv(
+  "Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2014_raw.csv",
+  stringsAsFactors = TRUE)
+EPA_2015 <- read.csv(
+  "Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2015_raw.csv",
+  stringsAsFactors = TRUE)
+EPA_2016 <- read.csv(
+  "Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2016_raw.csv",
+  stringsAsFactors = TRUE)
+EPA_2017 <- read.csv(
+  "Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2017_raw.csv",
+  stringsAsFactors = TRUE)
+EPA_2018 <- read.csv(
+  "Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2018_raw.csv",
+  stringsAsFactors = TRUE)
+EPA_2019 <- read.csv(
+  "Data/Raw/Ozone_TimeSeries/EPAair_O3_GaringerNC2019_raw.csv",
+  stringsAsFactors = TRUE)
 
 # combing the datasets using rbind() function since 
 ## all column names are the same
-GaringerOzone <- rbind(EPA_2010,EPA_2011,EPA_2012,EPA_2013,EPA_2014,EPA_2015,EPA_2016,EPA_2017,EPA_2018,EPA_2019)
+GaringerOzone <- rbind(EPA_2010,EPA_2011,EPA_2012,EPA_2013,EPA_2014,
+                       EPA_2015,EPA_2016,EPA_2017,EPA_2018,EPA_2019)
 
 ```
 
