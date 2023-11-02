@@ -50,7 +50,7 @@ library(here)
 
 2. Import the ten datasets from the Ozone_TimeSeries folder in the Raw data folder. These contain ozone concentrations at Garinger High School in North Carolina from 2010-2019 (the EPA air database only allows downloads for one year at a time). Import these either individually or in bulk and then combine them into a single dataframe named `GaringerOzone` of 3589 observation and 20 variables. 
 
-```{r, message = FALSE}
+```{r import data, message = FALSE}
 #2
 
 # importing data
@@ -81,7 +81,7 @@ GaringerOzone <- rbind(EPA_2010,EPA_2011,EPA_2012,EPA_2013,EPA_2014,EPA_2015,EPA
 
 6. Use a `left_join` to combine the data frames. Specify the correct order of data frames within this function so that the final dimensions are 3652 rows and 3 columns. Call your combined data frame GaringerOzone 
 
-```{r}
+```{r wrangle data}
 # 3
 # converting date column to date object
 GaringerOzone$Date <- as.Date(GaringerOzone$Date,format="%m/%d/%Y")
@@ -113,7 +113,7 @@ GO_Sub_Complete <- left_join(Days,GO_Sub)
 
 7. Create a line plot depicting ozone concentrations over time. In this case, we will plot actual concentrations in ppm, not AQI values. Format your axes accordingly. Add a smoothed line showing any linear trend of your data. Does your plot suggest a trend in ozone concentration over time?
 
-```{r}
+```{r visualize data}
 #7
 # plotting ozone concentrations over time
 ggplot(GO_Sub_Complete,aes(x=Date,y=Daily.Max.8.hour.Ozone.Concentration))+
@@ -131,7 +131,7 @@ Study question: Have ozone concentrations changed over the 2010s at this station
 
 8. Use a linear interpolation to fill in missing daily data for ozone concentration. Why didn't we use a piecewise constant or spline interpolation?
 
-```{r}
+```{r analyzing data Q8}
 #8
 summary(GO_Sub_Complete$Daily.Max.8.hour.Ozone.Concentration)
 
@@ -151,23 +151,29 @@ summary(GO_LinInterp$Daily.Max.8.hour.Ozone.Concentration)
 
 9. Create a new data frame called `GaringerOzone.monthly` that contains aggregated data: mean ozone concentrations for each month. In your pipe, you will need to first add columns for year and month to form the groupings. In a separate line of code, create a new Date column with each month-year combination being set as the first day of the month (this is for graphing purposes only)
 
-```{r}
+```{r analyzing data Q9}
 #9
 GaringerOzone.monthly <- GO_LinInterp %>%
+  # creating separate month and year columns
   mutate(Month = month(Date), Year = year(Date)) %>%
-  group_by(Month, Year) %>%
-  Date_M_Y = as.yearmon(paste(month, day, year), "%Y %b") 
-
-  #use the zoo as.yearmon() to get the year and month only
-
+  # creating a new column with Month and Year - day is the 1st of the month
+  mutate( Date_MY = my(paste0(Month,"-",Year))) #%>%
+  # generating means
+  # summarise(Mean_Monthly_Ozone_Concentration = mean(Daily.Max.8.hour.Ozone.Concentration))
 
 ```
 
 
 10. Generate two time series objects. Name the first `GaringerOzone.daily.ts` and base it on the dataframe of daily observations. Name the second `GaringerOzone.monthly.ts` and base it on the monthly average ozone values. Be sure that each specifies the correct start and end dates and the frequency of the time series.
 
-```{r}
+```{r analyzing data Q10}
 #10
+
+GaringerOzone.daily.ts <- ts(GO_LinInterp$Daily.Max.8.hour.Ozone.Concentration,start(),frequency = 365)
+
+# GaringerOzone.monthly.ts <- ts(GaringerOzone.monthly$Daily.Max.8.hour.Ozone.Concentration, start(),frequency = 365)
+
+
 
 ```
 
