@@ -271,7 +271,7 @@ ggplot(GaringerOzone.monthly,
 
 ```{r}
 #15
-# separating out seasonal component of time series 
+# separating out seasonal component of time series (Jon Joyner helped me figure out how to do question 15)
 GO_Seasonal_Monthly.ts <- 
   (GO_Monthly_Decomp$time.series[,"seasonal"])
 
