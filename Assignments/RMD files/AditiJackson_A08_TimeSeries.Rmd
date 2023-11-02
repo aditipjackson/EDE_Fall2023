@@ -116,7 +116,8 @@ GO_Sub_Complete <- left_join(Days,GO_Sub)
 ```{r visualize data}
 #7
 # plotting ozone concentrations over time
-ggplot(GO_Sub_Complete,aes(x=Date,y=Daily.Max.8.hour.Ozone.Concentration))+
+ggplot(GO_Sub_Complete,aes(
+  x=Date,y=Daily.Max.8.hour.Ozone.Concentration))+
   geom_line()+
   geom_smooth(method="lm")+
   labs(x = "", y = "Ozone Concentration (ppm)")
@@ -138,7 +139,9 @@ summary(GO_Sub_Complete$Daily.Max.8.hour.Ozone.Concentration)
 # using a linear interpolation to fill in missing daily data for ozone concentration
 GO_LinInterp <- 
   GO_Sub_Complete %>%
-  mutate(Daily.Max.8.hour.Ozone.Concentration = na.approx(Daily.Max.8.hour.Ozone.Concentration))
+  mutate(
+    Daily.Max.8.hour.Ozone.Concentration = 
+      na.approx(Daily.Max.8.hour.Ozone.Concentration))
    
 # checking that NAs in column were filled in
 summary(GO_LinInterp$Daily.Max.8.hour.Ozone.Concentration)
@@ -155,11 +158,17 @@ summary(GO_LinInterp$Daily.Max.8.hour.Ozone.Concentration)
 #9
 GaringerOzone.monthly <- GO_LinInterp %>%
   # creating separate month and year columns
-  mutate(Month = month(Date), Year = year(Date)) %>%
-  # creating a new column with Month and Year - day is the 1st of the month
-  mutate( Date_MY = my(paste0(Month,"-",Year))) #%>%
-  # generating means
-  # summarise(Mean_Monthly_Ozone_Concentration = mean(Daily.Max.8.hour.Ozone.Concentration))
+  mutate(Year = year(Date),Month = month(Date)) %>%
+  # grouping by Month and Year
+  group_by(Year,Month) %>%
+  # generating means for Ozone concentrations
+  summarize(
+    Mean_Mo_Ozone_Con = 
+      mean(Daily.Max.8.hour.Ozone.Concentration))
+
+# creating new column in M-Y format
+GaringerOzone.monthly <- GaringerOzone.monthly %>%
+  mutate(Date = my(paste0(Month,"-",Year)))
 
 ```
 
@@ -169,11 +178,15 @@ GaringerOzone.monthly <- GO_LinInterp %>%
 ```{r analyzing data Q10}
 #10
 
-GaringerOzone.daily.ts <- ts(GO_LinInterp$Daily.Max.8.hour.Ozone.Concentration,start(),frequency = 365)
+# creating a time series object for Daily Ozone values
+GaringerOzone.daily.ts <- ts(
+  GO_LinInterp$Daily.Max.8.hour.Ozone.Concentration,start(2010,1), 
+          frequency = 365)
 
-# GaringerOzone.monthly.ts <- ts(GaringerOzone.monthly$Daily.Max.8.hour.Ozone.Concentration, start(),frequency = 365)
-
-
+# creating a time series object for Monthly Ozone values
+GaringerOzone.monthly.ts <- ts(
+  GaringerOzone.monthly$Mean_Mo_Ozone_Con, start(2010,1), 
+          frequency = 12)
 
 ```
 
@@ -182,7 +195,17 @@ GaringerOzone.daily.ts <- ts(GO_LinInterp$Daily.Max.8.hour.Ozone.Concentration,s
 
 ```{r}
 #11
+# decomposing daily time series object
+GO_Daily_Decomp <- stl(GaringerOzone.daily.ts, s.window = "periodic")
 
+# decomposing monthly time series object
+GO_Monthly_Decomp <- stl(GaringerOzone.monthly.ts, s.window = "periodic")
+
+# plotting daily decomposition
+plot(GO_Daily_Decomp)
+
+# plotting monthly decomposition
+plot(GO_Monthly_Decomp)
 
 ```
 
@@ -191,26 +214,33 @@ GaringerOzone.daily.ts <- ts(GO_LinInterp$Daily.Max.8.hour.Ozone.Concentration,s
 
 ```{r}
 #12
+# running Mann-Kendall test on monthly Ozone
+GO_Data_MKT_Initial <- 
+  Kendall::SeasonalMannKendall(GaringerOzone.monthly.ts)
 
-
+# displaying results of test
+summary(GO_Data_MKT_Initial)
 
 ```
 
-> Answer: 
+> Answer: The seasonal Mann-Kendall test is most appropriate for the monthly Ozone data it's seasonal and non-parametric (no assumptions about the frequency distribution).
 
 13. Create a plot depicting mean monthly ozone concentrations over time, with both a geom_point and a geom_line layer. Edit your axis labels accordingly.
 
 ```{r}
 # 13
-
-
-
+# plotting mean monthly ozone concentrations over time
+ggplot(GaringerOzone.monthly,
+       aes(x=Date,y=Mean_Mo_Ozone_Con))+
+  geom_point()+
+  geom_line()+
+  labs(x="",y="Avg Monthly Ozone Concentration (ppm)")
 
 ```
 
 14. To accompany your graph, summarize your results in context of the research question. Include output from the statistical test in parentheses at the end of your sentence. Feel free to use multiple sentences in your interpretation.
 
-> Answer: 
+> Answer: The research question asks if ozone concentrations changed over the 2010s at this station. Based on the graph, it appears that Ozone concencentrations are seasonal and have changed over time. The statistical test outcome validates this conclusion given that the p-value is less than alpha = 0.05, meaning we would reject the null hypothesis that there is not change in concentrations. The negative tau value tells us that the slope is negative and therefore ozone concentrations have decreased over time (2-sided pvalue = 0.046, tau = -0.143). 
 
 15. Subtract the seasonal component from the `GaringerOzone.monthly.ts`. Hint: Look at how we extracted the series components for the EnoDischarge on the lesson Rmd file.
 
@@ -218,14 +248,23 @@ GaringerOzone.daily.ts <- ts(GO_LinInterp$Daily.Max.8.hour.Ozone.Concentration,s
 
 ```{r}
 #15
+# separating out seasonal component of time series 
+GO_Seasonal_Monthly.ts <- 
+  (GO_Monthly_Decomp$time.series[,"seasonal"])
 
-
+# subtracting seasonal component from original time series
+GO_Unseasoned <- GaringerOzone.monthly.ts - GO_Seasonal_Monthly.ts
 
 #16
+# running Mann Kendall test
+GO_Data_MKT_Unseasoned <- Kendall::MannKendall(GO_Unseasoned)
 
+# summarizing unseasonal data
+summary(GO_Data_MKT_Unseasoned)
 
-
+#summarizing seasonal data
+summary(GO_Data_MKT_Initial)
 
 ```
 
-> Answer: 
+> Answer: Comparing the tests, the p-value of the non-seasonal Mann-Kendall is lower than the p-value of the seasonal test. This makes logical sense because in the non-seasonal test, you are removing the variability due to seasonal changes, which strengths the relationship between Ozone and time horizon. The tau value shows a slightly steeper slope for nonseasonal, which verifies that removing the seasonal component strengthens the relationship between ozone and time.
