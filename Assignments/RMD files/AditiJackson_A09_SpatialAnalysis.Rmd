@@ -104,16 +104,18 @@ colnames(gageLocations_df)
 
 ```{r Convert dataframe to sf dataframe}
 #10. Convert to an sf object
-
+gageLocations_sf <- gageLocations_df %>%
+  st_as_sf(coords=c("dec_long_va","dec_lat_va"),
+           crs=4269)
 
 #11. Re-examine the column names
-
+colnames(gageLocations_sf)
 
 ```
 
 12. What new field(s) appear in the sf dataframe created? What field(s), if any, disappeared?
 
->ANSWER: 
+>ANSWER: A "geometry" column appeared and the lattitude and longitude columns disappeared when we converted the dataframe to a spatial dataframe. 
 >
 
 
@@ -126,7 +128,8 @@ colnames(gageLocations_df)
 
 ```{r Plot the spatial features}
 #13. Plot the gage locations atop the county features
-
+mapview(gageLocations_sf, col.region="darkgreen")+
+  mapView(counties_sf, col.region="lightblue")
 
 ```
 
@@ -146,19 +149,23 @@ Lastly, we want to attach some gage height data to our site locations. I've cons
 
 ```{r Read in gage site data}
 #14. Read the site flow data into a data frame
+NWISflow_df <- read.csv("Data/Raw/NWIS_SiteFlowData_NE_RAW.csv", stringsAsFactors = TRUE)
 
+# convert date column? NWISflow_df$date <- ymd(NWISflow_df$date)
 
 #15. Show the column names
-
+colnames(NWISflow_df)
 
 #16. Join the flow data to our NWIS gage location spatial dataframe
-
+gageLocations_join_sf <- gageLocations_sf %>%
+  left_join(NWISflow_df, by="site_no") %>%
+  na.omit()
 
 #17. Show the column names of the joined dataset
-
+colnames(gageLocations_join_sf)
 
 #18. Show the dimensions of this joined dataset
-
+dim(gageLocations_join_sf)
 
 ```
 
@@ -170,7 +177,8 @@ Now we can examine where the flooding appears most acute by visualizing gage hei
 
 ```{r map gage sites}
 #Map the points, sized by gage height
-
+mapView(counties_sf,col.region="lightblue")+
+  mapView(gageLocations_join_sf)
 
 ```
 
@@ -189,8 +197,15 @@ Up next we will do some spatial analysis with our data. To prepare for this, we 
 ```{r spatial analysis}
 #20 Transform the counties and gage location datasets to UTM Zone 14
 
+#transforming counties dataset
+counties_transformed_sf <- st_transform(counties_sf,crs=32614)
+
+#transforming gage dataset
+gageLocations_transformed_sf <- st_transform(gageLocations_sf,crs=32614)
 
 #21 Plot the data
+mapView(counties_transformed_sf, col.region="lightblue")+
+  mapView(gageLocations_transformed_sf, col.region="darkgreen")
 
 
 ```
@@ -209,13 +224,14 @@ Now let's zoom into a particular county and examine the gages located there.
 
 ```{r spatial selection}
 #22 Select the county
-
+counties_Dawson_sf <- counties_transformed_sf %>%
+  filter(NAME=="Dawson")
 
 #23 Spatially select gages within the selected county
-
+DawsonCounty_gages_intersect <- gageLocations_transformed_sf[counties_Dawson_sf,]
 
 #24 Plot
-
-
-
+mapView(counties_transformed_sf,col.region="lightblue")+
+  mapView(DawsonCounty_gages_intersect, col.region="darkblue")
+  
 ```
