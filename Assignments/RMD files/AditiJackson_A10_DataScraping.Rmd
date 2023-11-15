@@ -109,7 +109,7 @@ maxDailyUse
 #creating a dataframe with Month, Year, and Max Daily Value
 scraped_df1 <- data.frame("Month" = rep(1:12),
                          "Year" = rep(2022),
-                         "Maximum Daily Use"=as.numeric(maxDailyUse))  
+                         "Maximum Daily Use"=maxDailyUse)  
 
 # creating pipe, adding remaining scrapped data as columns and creating a date column
 scraped_df2 <- scraped_df1 %>%
@@ -121,7 +121,8 @@ scraped_df2 <- scraped_df1 %>%
 #5
 ggplot(scraped_df2,aes(x=Date,y=maxDailyUse))+
   geom_line()+
-  labs(title=paste("Maximum Daily Water Usage (Durham)"),
+  geom_smooth(method="loess",se=FALSE) +
+  labs(title=paste0("Maximum Daily Water Usage (Durham)"),
      y="Maximum Daily Water Usage",
       x="Date")
 
@@ -132,6 +133,47 @@ ggplot(scraped_df2,aes(x=Date,y=maxDailyUse))+
 ```{r construct.a.scraping.function}
 #6. 
 
+#Constructing the scraping web address
+the_base_url <- 'https://www.ncwater.org/WUDC/app/LWSP/report.php?'
+the_PWSID <- '03-32-010'
+the_year <- 2022
+the_scrape_url <- paste0(the_base_url, '/', the_PWSID, '/', the_year)
+print(the_scrape_url)
+
+# get website's contents
+the_website <- read_html(the_scrape_url)
+
+#Creating scraping function
+scraping.function <- function(the_year,the_PWSID){
+
+  # Getting website contents
+  the_website <- read_html(the_base_url,the_PWSID, the_year)
+
+  # setting element address variables
+  waterSystemName_tag <- "div+ table tr:nth-child(1) td:nth-child(2)"
+  PWSID_tag <-"td tr:nth-child(1) td:nth-child(5)"
+  ownership_tag <- "div+ table tr:nth-child(2) td:nth-child(4)"
+  maxDailyUse_tag <-".fancy-table:nth-child(31) th+ td"
+  
+  # scrapping data items
+  waterSystemName <- the_website %>% html_nodes(waterSystemName_tag) %>% html_text()
+  PSWID <- the_website %>% html_nodes(PWSID_tag) %>% html_text()
+  ownership <- the_website %>% html_nodes(ownership_tag) %>% html_text()
+  maxDailyUse <- the_website %>% html_nodes(maxDailyUse_tag) %>% html_text()
+  
+  # converting to data frame
+  df_maxDailyUse <- data.frame("Month" = rep(1:12),
+                         "Year" = the_year,
+                         "Maximum Daily Use" = maxDailyUse) %>%
+      mutate(Water.System.Name = !!waterSystemName,
+         PWSID = !!PWSID,
+         Ownership = !!ownership,
+         Date = my(paste(Month,"-",Year)))
+    
+  return(df_maxDailyUse)
+}
+
+
 
 ```
 
@@ -140,6 +182,8 @@ ggplot(scraped_df2,aes(x=Date,y=maxDailyUse))+
 ```{r fetch.and.plot.Durham.2015.data}
 #7 
 
+maxDailyUse2015_df <- scraping.function(2015,'03-32-010')
+view(maxDailyUse2015_df)
 
 ```
 
