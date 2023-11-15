@@ -88,7 +88,7 @@ ownership
 
 # scraping Maximum Daily Use (MGD)
 maxDailyUse <- URL_scrape %>%
-  html_nodes(".fancy-table:nth-child(31) th+ td") %>%
+  html_nodes("th~ td+ td") %>%
   html_text()
 maxDailyUse
 
@@ -107,24 +107,22 @@ maxDailyUse
 #4 
 
 #creating a dataframe with Month, Year, and Max Daily Value
-scraped_df1 <- data.frame("Month" = rep(1:12),
-                         "Year" = rep(2022),
-                         "Maximum Daily Use"=maxDailyUse)  
-
-# creating pipe, adding remaining scrapped data as columns and creating a date column
-scraped_df2 <- scraped_df1 %>%
+scraped_durham <- data.frame("Month" = c(1,5,9,2,6,10,3,7,11,4,8,12), 
+                         "Year" = rep(2022,12),
+                         "Maximum.Daily.Use"=as.numeric(maxDailyUse))  %>%
+  # creating pipe, adding remaining scrapped data as columns and creating a date column
   mutate(Water.System.Name = !!waterSystemName,
          PWSID = !!PWSID,
          Ownership = !!ownership,
          Date = my(paste(Month,"-",Year)))
 
 #5
-ggplot(scraped_df2,aes(x=Date,y=maxDailyUse))+
-  geom_line()+
-  geom_smooth(method="loess",se=FALSE) +
+ggplot(scraped_durham)+
+  geom_line(aes(x=Date,y=Maximum.Daily.Use))+
   labs(title=paste0("Maximum Daily Water Usage (Durham)"),
      y="Maximum Daily Water Usage",
-      x="Date")
+      x="Date")+
+  scale_x_date(date_labels = "%b", date_breaks = "1 month")
 
 ```
 
@@ -137,7 +135,7 @@ ggplot(scraped_df2,aes(x=Date,y=maxDailyUse))+
 the_base_url <- 'https://www.ncwater.org/WUDC/app/LWSP/report.php?'
 the_PWSID <- '03-32-010'
 the_year <- 2022
-the_scrape_url <- paste0(the_base_url, '/', the_PWSID, '/', the_year)
+the_scrape_url <- paste0(the_base_url, 'pwsid=', the_PWSID, '&year=', the_year)
 print(the_scrape_url)
 
 # get website's contents
@@ -147,7 +145,7 @@ the_website <- read_html(the_scrape_url)
 scraping.function <- function(the_year,the_PWSID){
 
   # Getting website contents
-  the_website <- read_html(the_base_url,the_PWSID, the_year)
+  the_website <- read_html(the_base_url, 'pwsid=', the_PWSID, '&year=', the_year)
 
   # setting element address variables
   waterSystemName_tag <- "div+ table tr:nth-child(1) td:nth-child(2)"
@@ -162,9 +160,9 @@ scraping.function <- function(the_year,the_PWSID){
   maxDailyUse <- the_website %>% html_nodes(maxDailyUse_tag) %>% html_text()
   
   # converting to data frame
-  df_maxDailyUse <- data.frame("Month" = rep(1:12),
-                         "Year" = the_year,
-                         "Maximum Daily Use" = maxDailyUse) %>%
+  df_maxDailyUse <- data.frame("Month" = c(1,5,9,2,6,10,3,7,11,4,8,12),
+                         "Year" = rep(the_year,12),
+                         "Maximum Daily Use" = as.numeric(maxDailyUse))%>%
       mutate(Water.System.Name = !!waterSystemName,
          PWSID = !!PWSID,
          Ownership = !!ownership,
@@ -174,14 +172,12 @@ scraping.function <- function(the_year,the_PWSID){
 }
 
 
-
 ```
 
 7. Use the function above to extract and plot max daily withdrawals for Durham (PWSID='03-32-010') for each month in 2015
 
 ```{r fetch.and.plot.Durham.2015.data}
 #7 
-
 maxDailyUse2015_df <- scraping.function(2015,'03-32-010')
 view(maxDailyUse2015_df)
 
@@ -192,7 +188,6 @@ view(maxDailyUse2015_df)
 ```{r fetch.and.plot.Asheville.2015.data}
 #8 
 
-
 ```
 
 
@@ -202,7 +197,6 @@ view(maxDailyUse2015_df)
 
 ```{r fetch.and.plot.Asheville.multiyear.data }
 #9 
-
 
 ```
 
