@@ -119,8 +119,8 @@ scraped_durham <- data.frame("Month" = c(1,5,9,2,6,10,3,7,11,4,8,12),
 #5
 ggplot(scraped_durham)+
   geom_line(aes(x=Date,y=Maximum.Daily.Use))+
-  labs(title=paste0("Maximum Daily Water Usage (Durham)"),
-     y="Maximum Daily Water Usage",
+  labs(title=paste0("Maximum Daily Water Usage (Durham, 2022)"),
+     y="Maximum Daily Water Usage (mgd)",
       x="Date")+
   scale_x_date(date_labels = "%b", date_breaks = "1 month")
 
@@ -174,8 +174,17 @@ scraping.function <- function(the_year,the_PWSID){
 
 ```{r fetch.and.plot.Durham.2015.data}
 #7 
+# scarping data using function for Durha, 2015
 maxDailyUse_Durham_2015_df <- scraping.function(2015,'03-32-010')
 view(maxDailyUse_Durham_2015_df)
+
+# plotting data
+ggplot(maxDailyUse_Durham_2015_df)+
+  geom_line(aes(x=Date,y=Maximum.Daily.Use))+
+  labs(title=paste0("Maximum Daily Water Usage (Durham, 2015)"),
+     y="Maximum Daily Water Usage (mgd)",
+      x="Date")+
+  scale_x_date(date_labels = "%b", date_breaks = "1 month")
 
 ```
 
@@ -195,7 +204,7 @@ maxDailyUSE_Dur_Ash_2015<- rbind(maxDailyUse_Durham_2015_df,maxDailyUse_Ashevill
 ggplot(maxDailyUSE_Dur_Ash_2015)+
   geom_line(aes(x=Date,y=Maximum.Daily.Use,color=Water.System.Name))+
   labs(title=paste0("Maximum Daily Water Usage (Durham vs Asheville)"),
-     y="Maximum Daily Water Usage",
+     y="Maximum Daily Water Usage (mgd)",
       x="Date",color="Water System Name")+
   scale_x_date(date_labels = "%b", date_breaks = "1 month")
 ```
@@ -207,25 +216,26 @@ ggplot(maxDailyUSE_Dur_Ash_2015)+
 
 ```{r fetch.and.plot.Asheville.multiyear.data }
 #9
-# plotting Asheville's maximum daily withdrawal
-ggplot(maxDailyUse_Asheville_2015_df)+
-  geom_line(aes(x=Date,y=Maximum.Daily.Use))+
+# create sequence of years
+the_years <- seq(2010,2021)
+the_PWSID <- rep("01-11-010",12)
+
+# using map2 with function to retrieve data for desired years
+# piping into rbind to bind all data scraped
+maxDailyUse_Asheville_2010_2021_df <- map2(the_years,the_PWSID, scraping.function) %>%
+  bind_rows()
+
+# plotting Asheville's maximum daily withdrawal for 2010 through 2021
+ggplot(maxDailyUse_Asheville_2010_2021_df,aes(x=Date,y=Maximum.Daily.Use))+
+  geom_line()+
+  geom_smooth(method="loess")+
   labs(title=paste0("Maximum Daily Water Usage (Asheville)"),
-     y="Maximum Daily Water Usage",
+     y="Maximum Daily Water Usage (mgd)",
       x="Date")+
-  scale_x_date(date_labels = "%b", date_breaks = "1 month")
-
-
-#"Map"-ing the function to retrieve data for all these values
-maxDailyUse_Asheville_2015_df <- map2(the_yera,the_PWSID, scraping.function) 
-
-#Conflate the returned list of dataframes into a single one
-df_2020 <- bind_rows(dfs_2020)
-
-
+  scale_x_date(date_labels = "%Y",date_breaks = "1 year")
 
 ```
 
 Question: Just by looking at the plot (i.e. not running statistics), does Asheville have a trend in water usage over time?
-> Answer:
+> Answer: Yes. Ashville's water usage appears to be trending upwards. We can see from the graph that in 2021 usage was around ~24 mgd, compared to ~21 mgd in 2015 and ~22 mgd in 2010.
 >
