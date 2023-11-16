@@ -131,27 +131,23 @@ ggplot(scraped_durham)+
 ```{r construct.a.scraping.function}
 #6. 
 
-#Constructing the scraping web address
-the_base_url <- 'https://www.ncwater.org/WUDC/app/LWSP/report.php?'
-the_PWSID <- '03-32-010'
-the_year <- 2022
-the_scrape_url <- paste0(the_base_url, 'pwsid=', the_PWSID, '&year=', the_year)
-print(the_scrape_url)
-
-# get website's contents
-the_website <- read_html(the_scrape_url)
-
 #Creating scraping function
 scraping.function <- function(the_year,the_PWSID){
 
+  # defining variables
+  the_base_url <- 'https://www.ncwater.org/WUDC/app/LWSP/report.php?'
+  #the_PWSID <- '03-32-010'
+  #the_year <- 2022
+  the_scrape_url <- paste0(the_base_url,'pwsid=',the_PWSID,'&year=',the_year)
+
   # Getting website contents
-  the_website <- read_html(the_base_url, 'pwsid=', the_PWSID, '&year=', the_year)
+  the_website <- read_html(the_scrape_url)
 
   # setting element address variables
   waterSystemName_tag <- "div+ table tr:nth-child(1) td:nth-child(2)"
   PWSID_tag <-"td tr:nth-child(1) td:nth-child(5)"
   ownership_tag <- "div+ table tr:nth-child(2) td:nth-child(4)"
-  maxDailyUse_tag <-".fancy-table:nth-child(31) th+ td"
+  maxDailyUse_tag <-"th~ td+ td"
   
   # scrapping data items
   waterSystemName <- the_website %>% html_nodes(waterSystemName_tag) %>% html_text()
@@ -162,9 +158,9 @@ scraping.function <- function(the_year,the_PWSID){
   # converting to data frame
   df_maxDailyUse <- data.frame("Month" = c(1,5,9,2,6,10,3,7,11,4,8,12),
                          "Year" = rep(the_year,12),
-                         "Maximum Daily Use" = as.numeric(maxDailyUse))%>%
+                         "Maximum.Daily.Use" = as.numeric(maxDailyUse))%>%
       mutate(Water.System.Name = !!waterSystemName,
-         PWSID = !!PWSID,
+         PWSID = !!the_PWSID,
          Ownership = !!ownership,
          Date = my(paste(Month,"-",Year)))
     
@@ -178,8 +174,8 @@ scraping.function <- function(the_year,the_PWSID){
 
 ```{r fetch.and.plot.Durham.2015.data}
 #7 
-maxDailyUse2015_df <- scraping.function(2015,'03-32-010')
-view(maxDailyUse2015_df)
+maxDailyUse_Durham_2015_df <- scraping.function(2015,'03-32-010')
+view(maxDailyUse_Durham_2015_df)
 
 ```
 
@@ -188,15 +184,45 @@ view(maxDailyUse2015_df)
 ```{r fetch.and.plot.Asheville.2015.data}
 #8 
 
+# extracting data for Asheville in 2015 using function
+maxDailyUse_Asheville_2015_df <- scraping.function(2015,'01-11-010')
+view(maxDailyUse_Asheville_2015_df)
+
+# combining data collected with Durham data in #7 - use merge or join functions
+maxDailyUSE_Dur_Ash_2015<- rbind(maxDailyUse_Durham_2015_df,maxDailyUse_Asheville_2015_df)
+
+# comparing Asheville and Durham graphically
+ggplot(maxDailyUSE_Dur_Ash_2015)+
+  geom_line(aes(x=Date,y=Maximum.Daily.Use,color=Water.System.Name))+
+  labs(title=paste0("Maximum Daily Water Usage (Durham vs Asheville)"),
+     y="Maximum Daily Water Usage",
+      x="Date",color="Water System Name")+
+  scale_x_date(date_labels = "%b", date_breaks = "1 month")
 ```
 
 
-9. Use the code & function you created above to plot Asheville's max daily withdrawal by months for the years 2010 thru 2021.Add a smoothed line to the plot (method = 'loess').
+9. Use the code & function you created above to plot Asheville's max daily withdrawal by months for the years 2010 thru 2021. Add a smoothed line to the plot (method = 'loess').
 
 > TIP: See Section 3.2 in the "10_Data_Scraping.Rmd" where we apply "map2()" to iteratively run a function over two inputs. Pipe the output of the map2() function to `bindrows()` to combine the dataframes into a single one. 
 
 ```{r fetch.and.plot.Asheville.multiyear.data }
-#9 
+#9
+# plotting Asheville's maximum daily withdrawal
+ggplot(maxDailyUse_Asheville_2015_df)+
+  geom_line(aes(x=Date,y=Maximum.Daily.Use))+
+  labs(title=paste0("Maximum Daily Water Usage (Asheville)"),
+     y="Maximum Daily Water Usage",
+      x="Date")+
+  scale_x_date(date_labels = "%b", date_breaks = "1 month")
+
+
+#"Map"-ing the function to retrieve data for all these values
+maxDailyUse_Asheville_2015_df <- map2(the_yera,the_PWSID, scraping.function) 
+
+#Conflate the returned list of dataframes into a single one
+df_2020 <- bind_rows(dfs_2020)
+
+
 
 ```
 
